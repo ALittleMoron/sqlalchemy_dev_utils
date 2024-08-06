@@ -1,12 +1,12 @@
 
-# Dev utils
+# SQLAlchemy Dev utils
 
 ![coverage](./coverage.svg)
 
 ## For what?
 
 I made this project to avoid copy-pasting with utils in my projects. I was aiming to simplify
-working with sqlalchemy, FastAPI and other libraries.
+working with sqlalchemy.
 
 See sources for more info about utils. README (or probably, separated documentation), will be
 updated soon.
@@ -16,19 +16,19 @@ updated soon.
 With pip:
 
 ```bash
-pip install sqlalchemy_profiler
+pip install sqlalchemy-dev-utils
 ```
 
 With pdm:
 
 ```bash
-pdm install sqlalchemy_profiler
+pdm add sqlalchemy-dev-utils
 ```
 
 With poetry:
 
 ```bash
-poetry add sqlalchemy_profiler
+poetry add sqlalchemy-dev-utils
 ```
 
 Package has optional dependencies, so if you use it in some specific cases, install only needed
