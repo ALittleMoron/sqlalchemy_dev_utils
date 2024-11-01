@@ -5,6 +5,7 @@ functionality.
 """
 
 import types
+from inspect import isclass
 from typing import TYPE_CHECKING, Any, Literal, TypeGuard, TypeVar, overload
 from warnings import warn
 
@@ -37,20 +38,16 @@ Statement = (
 )
 
 
-def is_declarative(model: Any) -> TypeGuard["Mapper[Any]"]:  # noqa: ANN401
-    """Get sqlalchemy field (column) or relationship object from given model.
+def is_declarative_entity(model: Any) -> TypeGuard["DeclarativeBase"]:  # noqa: ANN401
+    """Check given value to be DeclarativeBase entity/instance or not.
 
     Args
     ----
-    model : Any
-        Any object.
-    field_name : str
-        name of field to find in model.
+    model : Any object.
 
     Returns
     -------
-    QueryableAttribute[Any]
-        any attribute from model, that can be used in queries.
+    Type guard result of DeclarativeBase class.
     """
     try:
         mapper: "Mapper[Any]" = inspect(model)
@@ -59,7 +56,28 @@ def is_declarative(model: Any) -> TypeGuard["Mapper[Any]"]:  # noqa: ANN401
     else:
         if not hasattr(mapper, "is_mapper"):
             return False
-        return mapper.is_mapper
+        return not isclass(model) and not mapper.is_mapper
+
+
+def is_declarative_class(model: Any) -> TypeGuard["type[DeclarativeBase]"]:  # noqa: ANN401
+    """Check given value to be DeclarativeBase class or not.
+
+    Args
+    ----
+    model : Any object.
+
+    Returns
+    -------
+    Type guard result of DeclarativeBase class.
+    """
+    try:
+        mapper: "Mapper[Any]" = inspect(model)
+    except SQLAlchemyError:
+        return False
+    else:
+        if not hasattr(mapper, "is_mapper"):
+            return False
+        return isclass(model) and mapper.is_mapper
 
 
 def get_unloaded_fields(instance: "DeclarativeBase") -> set[str]:
@@ -186,7 +204,7 @@ def get_model_classes_from_statement(stmt: Statement) -> "Sequence[type[Declarat
                 msg = "From clause without table binding was found and skipped for statement."
                 warn(msg, stacklevel=1)
                 continue
-            if not is_declarative(_from_clause.entity_namespace):  # pragma: no cover
+            if not is_declarative_class(_from_clause.entity_namespace):  # pragma: no cover
                 msg = (
                     f'Table with name "{_from_clause.name}" without Declarative model mapped '
                     "class was found and skipped. Use declarative models."

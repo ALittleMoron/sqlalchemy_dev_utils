@@ -1,0 +1,45 @@
+name: Publishing
+
+on:
+  workflow_call:
+    secrets:
+      pdm-username:
+        required: true
+      pdm-password:
+        required: true
+    inputs:
+      python-version:
+        required: true
+        type: string
+        default: "3.11"
+      os:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+      timeout:
+        required: false
+        type: number
+        default: 60
+
+
+jobs:
+  publish:
+    timeout-minutes: ${{ inputs.timeout }}
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ inputs.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: ${{ inputs.python-version }}
+      - uses: actions/cache@v3
+        name: Define a cache for the virtual environment based on the dependencies lock file
+        with:
+          path: ./.venv
+          key: venv-${{ hashFiles('pdm.lock') }}
+      - name: Publish package distributions to PyPI
+        run: pdm publish --username=${{ secrets.pdm-username }} --password=${{ secrets.pdm-password }}

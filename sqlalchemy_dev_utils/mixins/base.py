@@ -5,7 +5,7 @@ from dev_utils.common import get_object_class_absolute_name
 from sqlalchemy.orm.decl_api import declarative_mixin
 
 from sqlalchemy_dev_utils.exc import NoDeclarativeModelError
-from sqlalchemy_dev_utils.utils import is_declarative
+from sqlalchemy_dev_utils.utils import is_declarative_class
 
 if TYPE_CHECKING:
     from sqlalchemy.orm.decl_api import DeclarativeBase
@@ -19,7 +19,7 @@ class BaseModelMixin:
     @cached_property
     def _is_mixin_in_declarative_model(self) -> "TypeGuard[Mapper[Any]]":  # type: ignore[reportGeneralTypeIssues]
         """Semi-TypeGuard, which check original mixed class to be declarative model."""
-        return any(is_declarative(class_) for class_ in self.__class__.mro())
+        return any(is_declarative_class(class_) for class_ in self.__class__.mro())
 
     @cached_property
     def _sa_model_class(self) -> "type[DeclarativeBase]":

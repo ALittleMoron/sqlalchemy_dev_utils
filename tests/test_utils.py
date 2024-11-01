@@ -24,16 +24,37 @@ if TYPE_CHECKING:
 @pytest.mark.parametrize(
     ("obj", "expected_result"),
     [
-        (MyModel, True),
+        (MyModel(), True),
+        (MyModel, False),
+        (MyModel.id == 25, False),
+        (MyModel.id.asc(), False),
         (254, False),
         (MyModel.__table__, False),
     ],
 )
-def test_is_declarative(
+def test_is_declarative_entity(
     obj: Any,  # noqa: ANN401
     expected_result: bool,  # noqa: FBT001
 ) -> None:
-    assert utils.is_declarative(obj) == expected_result
+    assert utils.is_declarative_entity(obj) == expected_result
+
+
+@pytest.mark.parametrize(
+    ("obj", "expected_result"),
+    [
+        (MyModel, True),
+        (MyModel(), False),
+        (MyModel.id == 25, False),
+        (MyModel.id.asc(), False),
+        (254, False),
+        (MyModel.__table__, False),
+    ],
+)
+def test_is_declarative_class(
+    obj: Any,  # noqa: ANN401
+    expected_result: bool,  # noqa: FBT001
+) -> None:
+    assert utils.is_declarative_class(obj) == expected_result
 
 
 def test_get_unloaded_fields(

@@ -60,7 +60,7 @@ from sqlalchemy_dev_utils.utils import (
     get_valid_relationships_names as get_valid_relationships_names,
 )
 from sqlalchemy_dev_utils.utils import (
-    is_declarative as is_declarative,
+    is_declarative_class as is_declarative,
 )
 from sqlalchemy_dev_utils.utils import (
     is_hybrid_method as is_hybrid_method,
