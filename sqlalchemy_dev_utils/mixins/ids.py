@@ -17,7 +17,6 @@ class IntegerIDMixin(BaseModelMixin):
         return mapped_column(
             BigInteger().with_variant(Integer, "sqlite"),
             nullable=False,
-            unique=True,
             primary_key=True,
             autoincrement=True,
         )
