@@ -1,3 +1,38 @@
+[project]
+name = "sqlalchemy_dev_utils"
+version = "1.4.0"
+description = "My sqlalchemy utils package, that I use in my projects."
+authors = [{ name = "Dmitriy Lunev", email = "dima.lunev14@gmail.com" }]
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = ["sqlalchemy>=2.0", "python-dev-utils==7.0.1"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.5.5",
+    "vulture>=2.11",
+    "pytest>=8.1.1",
+    "black>=24.3.0",
+    "bandit>=1.7.8",
+    "coverage>=7.4.4",
+    "pytest-cov>=4.1.0",
+    "isort>=5.13.2",
+    "pyright>=1.1.355",
+    "freezegun>=1.4.0",
+    "mimesis>=15.1.0",
+    "ipython>=8.22.2",
+    "sqlalchemy-utils>=0.41.2",
+    "psycopg2-binary>=2.9.9",
+    "asyncpg>=0.29.0",
+    "pytest-asyncio>=0.23.6",
+    "httpx>=0.27.0",
+    "pytest-mock>=3.14.0",
+]
+pydantic_field = ["pydantic>=2.0"]
+relativedelta_field = ["python-dateutil"]
+alembic = ["alembic"]
+
 [tool.ruff]
 output-format = "full"
 lint.select = ["ALL"]
@@ -48,7 +83,6 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
 "manage.py" = ["E402"]
 "tests/*" = ["D103"]
 
-
 [tool.black]
 line-length = 100
 skip-string-normalization = true
@@ -73,7 +107,6 @@ profile = "black"
 line_length = 100
 multi_line_output = 3
 
-
 [tool.coverage]
 [tool.coverage.run]
 source = ["sqlalchemy_dev_utils"]
@@ -95,51 +128,12 @@ exclude_lines = [
 [tool.pytest]
 testpath = "tests"
 
-
 [tool.bandit]
 exclude = ['tests']
 
 [tool.bandit.assert_used]
 skips = ['*_test.py', '*/test_*.py']
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "ruff>=0.5.5",
-    "vulture>=2.11",
-    "pytest>=8.1.1",
-    "black>=24.3.0",
-    "bandit>=1.7.8",
-    "coverage>=7.4.4",
-    "pytest-cov>=4.1.0",
-    "isort>=5.13.2",
-    "pyright>=1.1.355",
-    "freezegun>=1.4.0",
-    "mimesis>=15.1.0",
-    "ipython>=8.22.2",
-    "sqlalchemy-utils>=0.41.2",
-    "psycopg2-binary>=2.9.9",
-    "asyncpg>=0.29.0",
-    "pytest-asyncio>=0.23.6",
-    "httpx>=0.27.0",
-    "pytest-mock>=3.14.0",
-]
-
-
-[project]
-name = "sqlalchemy_dev_utils"
-version = "1.4.0"
-description = "My sqlalchemy utils package, that I use in my projects."
-authors = [{ name = "Dmitriy Lunev", email = "dima.lunev14@gmail.com" }]
-requires-python = ">=3.11"
-readme = "README.md"
-license = { text = "MIT" }
-dependencies = ["sqlalchemy>=2.0", "python-dev-utils==7.0.1"]
-
-[project.optional-dependencies]
-pydantic_field = ["pydantic"]
-relativedelta_field = ["python-dateutil"]
-alembic = ["alembic"]
-
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

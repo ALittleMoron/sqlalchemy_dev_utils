@@ -26,15 +26,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ inputs.python-version }}
-      - name: Set up PDM
-        uses: pdm-project/setup-pdm@v3
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: ${{ inputs.python-version }}
-      - uses: actions/cache@v3
-        name: Define a cache for the virtual environment based on the dependencies lock file
-        with:
-          path: ./.venv
-          key: venv-${{ hashFiles('pdm.lock') }}
+          enable-cache: true
       - name: Install the project dependencies
         run: make install
       - name: Run linting
