@@ -201,7 +201,7 @@ def test_max_repr_elements() -> None:
     assert instance_repr == 'MaxReprOtherBetterReprModel(id=1)'
 
 
-async def test_unload_fields_in_repr(
+def test_unload_fields_in_repr(
     db_sync_session: "Session",
     mymodel_sync_factory: "SyncFactoryFunctionProtocol[MyModel]",
 ) -> None:
