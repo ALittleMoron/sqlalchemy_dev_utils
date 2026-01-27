@@ -1189,7 +1189,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-alembic = [{ name = "alembic" }]
+alembic = [{ name = "alembic", specifier = ">=1.13.0" }]
 dev = [
     { name = "asyncpg", specifier = ">=0.29.0" },
     { name = "bandit", specifier = ">=1.7.8" },
@@ -1211,7 +1211,7 @@ dev = [
     { name = "vulture", specifier = ">=2.11" },
 ]
 pydantic-field = [{ name = "pydantic", specifier = ">=2.0" }]
-relativedelta-field = [{ name = "python-dateutil" }]
+relativedelta-field = [{ name = "python-dateutil", specifier = ">=2.8.2" }]
 
 [[package]]
 name = "sqlalchemy-utils"
