@@ -188,6 +188,7 @@ class TableNameMixin(BaseModelMixin):
     """
 
     __join_application_prefix__: ClassVar[bool] = False
+    __table_name_delimiter__: ClassVar[str] = "_"
 
     @classmethod
     def _get_model_application_name(cls) -> str:
@@ -215,5 +216,5 @@ class TableNameMixin(BaseModelMixin):
         if cls.__join_application_prefix__ and (
             (application_name := cls._get_model_application_name()) != ""
         ):
-            return f'{application_name}_{name.lower()}'
+            return f'{application_name}{cls.__table_name_delimiter__}{name.lower()}'
         return name.lower()
