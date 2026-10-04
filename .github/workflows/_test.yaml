@@ -6,6 +6,10 @@ on:
       python-version:
         required: true
         type: string
+      sqlalchemy-version:
+        required: false
+        type: string
+        default: "2.1"
       coverage:
         required: false
         type: boolean
@@ -22,6 +26,8 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: write
     timeout-minutes: ${{ inputs.timeout }}
     runs-on: ${{ inputs.os }}
     defaults:
@@ -42,25 +48,31 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Python ${{ inputs.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ inputs.python-version }}
       - name: Set up uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v10.2.0
         with:
           python-version: ${{ inputs.python-version }}
           enable-cache: true
       - name: Install the project dependencies
         run: make install
+      - name: Select SQLAlchemy compatibility line
+        run: uv pip install "sqlalchemy[asyncio]~=${{ inputs.sqlalchemy-version }}.0"
       - name: Run the automated tests with coverage
         if: ${{ inputs.coverage }}
+        env:
+          UV_NO_SYNC: "1"
         run: make tests
       - name: Coverage Badge
-        uses: tj-actions/coverage-badge-py@v2
+        if: ${{ inputs.python-version == '3.14' && inputs.sqlalchemy-version == '2.1' }}
+        uses: tj-actions/coverage-badge-py@v2.0.4
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v16
+        if: ${{ inputs.python-version == '3.14' && inputs.sqlalchemy-version == '2.1' }}
+        uses: tj-actions/verify-changed-files@v20.0.4
         id: verify-changed-files
         with:
           files: coverage.svg
@@ -73,7 +85,7 @@ jobs:
           git commit -m "Updated coverage.svg"
       - name: Push changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@v1.3.0
         with:
           github_token: ${{ secrets.github_token }}
           branch: ${{ github.ref }}

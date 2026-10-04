@@ -6,13 +6,12 @@ from functools import partial
 from sqlalchemy import Cast, Date, Time, cast
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.orm.decl_api import declarative_mixin, declared_attr
+from sqlalchemy.orm.decl_api import declared_attr
 
 from sqlalchemy_dev_utils.mixins.base import BaseModelMixin
 from sqlalchemy_dev_utils.types.datetime import UTCDateTime, Utcnow
 
 
-@declarative_mixin
 class CreatedAtAuditMixin(BaseModelMixin):
     """Audit mixin with created_at column (datetime)."""
 
@@ -53,7 +52,6 @@ class CreatedAtAuditMixin(BaseModelMixin):
         return self.created_at.isoformat()
 
 
-@declarative_mixin
 class UpdatedAtAuditMixin(BaseModelMixin):
     """Audit mixin with created_at column (datetime)."""
 
@@ -96,7 +94,6 @@ class UpdatedAtAuditMixin(BaseModelMixin):
         return self.updated_at.isoformat()
 
 
-@declarative_mixin
 class AuditMixin(CreatedAtAuditMixin, UpdatedAtAuditMixin):
     """Full audit mixin with created_at and updated_at columns."""
 

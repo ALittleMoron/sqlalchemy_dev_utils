@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeAlias
 from warnings import warn
 
 from dev_utils.common import get_object_class_absolute_name
-from sqlalchemy.orm.decl_api import declarative_mixin, declared_attr
+from sqlalchemy.orm.decl_api import declared_attr
 
 from sqlalchemy_dev_utils.mixins.base import BaseModelMixin
 from sqlalchemy_dev_utils.utils import (
@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     DictStrAny: TypeAlias = dict[str, Any]
 
 
-@declarative_mixin
 class DictConverterMixin(BaseModelMixin):
     """Mixin for converting models to dict."""
 
@@ -53,7 +52,6 @@ class DictConverterMixin(BaseModelMixin):
         return item
 
 
-@declarative_mixin
 class DifferenceMixin(BaseModelMixin):
     """Mixin for checking difference between instance and other objects.
 
@@ -143,7 +141,6 @@ class DifferenceMixin(BaseModelMixin):
         raise TypeError(msg)
 
 
-@declarative_mixin
 class BetterReprMixin(BaseModelMixin):
     """Mixin with better __repr__ method for SQLAlchemy model instances."""
 
@@ -177,7 +174,6 @@ class BetterReprMixin(BaseModelMixin):
         return f"{class_name}({values_pairs})"
 
 
-@declarative_mixin
 class TableNameMixin(BaseModelMixin):
     """Mixin for auto-creation of model table name (__tablename__).
 

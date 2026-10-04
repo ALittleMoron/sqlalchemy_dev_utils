@@ -1,6 +1,6 @@
 [project]
 name = "sqlalchemy_dev_utils"
-version = "1.4.0"
+version = "1.4.1"
 description = "My sqlalchemy utils package, that I use in my projects."
 authors = [{ name = "Dmitriy Lunev", email = "dima.lunev14@gmail.com" }]
 requires-python = ">=3.11"
@@ -10,6 +10,7 @@ dependencies = ["sqlalchemy>=2.0", "python-dev-utils==7.0.1"]
 
 [dependency-groups]
 dev = [
+    "sqlalchemy[asyncio]>=2.0",
     "ruff>=0.5.5",
     "vulture>=2.11",
     "pytest>=8.1.1",
@@ -22,7 +23,6 @@ dev = [
     "freezegun>=1.4.0",
     "mimesis>=15.1.0",
     "ipython>=8.22.2",
-    "sqlalchemy-utils>=0.41.2",
     "psycopg2-binary>=2.9.9",
     "asyncpg>=0.29.0",
     "pytest-asyncio>=0.23.6",
@@ -125,8 +125,8 @@ exclude_lines = [
     "@overload",
 ]
 
-[tool.pytest]
-testpath = "tests"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.bandit]
 exclude = ['tests']

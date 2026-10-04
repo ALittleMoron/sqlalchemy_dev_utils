@@ -4,15 +4,11 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel
-from sqlalchemy import ForeignKey, inspect
+from sqlalchemy import ForeignKey, create_engine, inspect
+from sqlalchemy.engine import make_url
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy_utils import (  # type: ignore[reportUnknownVariableType]
-    create_database,  # type: ignore[reportUnknownVariableType]
-    database_exists,  # type: ignore[reportUnknownVariableType]
-    drop_database,  # type: ignore[reportUnknownVariableType]
-)
 
 from sqlalchemy_dev_utils.mixins.audit import AuditMixin
 from sqlalchemy_dev_utils.mixins.general import BetterReprMixin, DictConverterMixin, DifferenceMixin
@@ -38,13 +34,26 @@ def coin_flip() -> bool:
 def create_db(uri: str) -> None:
     """Drop the database at ``uri`` and create a brand new one."""
     destroy_db(uri)
-    create_database(uri)
+    _execute_database_ddl(uri, "CREATE DATABASE")
 
 
 def destroy_db(uri: str) -> None:
     """Destroy the database at ``uri``, if it exists."""
-    if database_exists(uri):
-        drop_database(uri)
+    _execute_database_ddl(uri, "DROP DATABASE IF EXISTS")
+
+
+def _execute_database_ddl(uri: str, operation: str) -> None:
+    """Create or drop the isolated PostgreSQL test database."""
+    url = make_url(uri)
+    if url.database is None:
+        raise ValueError("A test database name is required")
+    engine = create_engine(url.set(database="postgres"), isolation_level="AUTOCOMMIT")
+    try:
+        database = engine.dialect.identifier_preparer.quote(url.database)
+        with engine.connect() as connection:
+            connection.exec_driver_sql(f"{operation} {database}")
+    finally:
+        engine.dispose()
 
 
 def generate_datetime_list(

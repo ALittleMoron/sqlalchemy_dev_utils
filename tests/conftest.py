@@ -67,7 +67,7 @@ def db_host() -> str:
 @pytest.fixture(scope="session")
 def db_port() -> int:
     """DB port as fixture."""
-    return 5432
+    return int(os.environ.get("TEST_POSTGRES_PORT", "5432"))
 
 
 @pytest.fixture(scope="session")
@@ -79,7 +79,7 @@ def db_domain(db_name: str, db_user: str, db_password: str, db_host: str, db_por
 @pytest.fixture(scope="session")
 def db_sync_url(db_domain: str) -> str:
     """URL for test db (will be created in db_engine): sync driver."""
-    return f"postgresql://{db_domain}"
+    return f"postgresql+psycopg2://{db_domain}"
 
 
 @pytest.fixture(scope="session")

@@ -27,15 +27,20 @@ jobs:
     timeout-minutes: ${{ inputs.timeout }}
     runs-on: ${{ inputs.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Python ${{ inputs.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ inputs.python-version }}
       - name: Set up uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v10.2.0
         with:
           python-version: ${{ inputs.python-version }}
           enable-cache: true
+      - name: Build package distributions
+        run: uv build --no-sources
       - name: Publish package distributions to PyPI
-        run: uv publish --username ${{ secrets.pdm-username }} --password ${{ secrets.pdm-password }}
+        env:
+          UV_PUBLISH_USERNAME: ${{ secrets.pdm-username }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.pdm-password }}
+        run: uv publish
