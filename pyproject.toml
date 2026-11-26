@@ -1,6 +1,6 @@
 [project]
 name = "sqlalchemy_dev_utils"
-version = "1.4.1"
+version = "1.4.2"
 description = "My sqlalchemy utils package, that I use in my projects."
 authors = [{ name = "Dmitriy Lunev", email = "dima.lunev14@gmail.com" }]
 requires-python = ">=3.11"
@@ -30,7 +30,7 @@ dev = [
     "pytest-mock>=3.14.0",
 ]
 pydantic_field = ["pydantic>=2.0"]
-relativedelta_field = ["python-dateutil>=2.8.2"]
+relativedelta_field = ["python-dateutil>=2.8.2,<3"]
 alembic = ["alembic>=1.13.0"]
 
 [tool.ruff]
@@ -50,14 +50,13 @@ exclude = [
     "airich",
 ]
 lint.ignore = [
+    "CPY001",
     "D100",
     "B008",
     "D104",
     "Q000",
     "S101",
     "PT016",
-    "ANN101",
-    "ANN102",
     "N805",
     "UP037",
     "PLC0414",

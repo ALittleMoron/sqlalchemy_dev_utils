@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from dateutil.relativedelta import relativedelta
@@ -15,9 +15,9 @@ if TYPE_CHECKING:
 class RelativeInterval(TypeDecorator[relativedelta]):
     """Interval with relativedelta implementation.
 
-    By default, Interval SQLAlchemy type represents ``datetime.timedelta`` type in python.
+    By default, Interval SQLAlchemy type represents ``dt.timedelta`` type in python.
     It is possible to make native interval with relativedelta, but it should be implemented on
-    driver level, because ``datetime.timedelta`` objects converts from native Interval type on
+    driver level, because ``dt.timedelta`` objects converts from native Interval type on
     driver level (see https://stackoverflow.com/a/19303883).
 
     According to this information, RelativeInterval was implemented as
@@ -27,7 +27,7 @@ class RelativeInterval(TypeDecorator[relativedelta]):
     cache_ok = True
 
     attr_keys: ClassVar[dict[type, set[str]]] = {
-        datetime.timedelta: {'days', 'seconds', 'microseconds'},
+        dt.timedelta: {'days', 'seconds', 'microseconds'},
         relativedelta: {
             'years',
             'months',
@@ -54,17 +54,17 @@ class RelativeInterval(TypeDecorator[relativedelta]):
 
     def process_bind_param(  # noqa: D102
         self,
-        value: datetime.timedelta | relativedelta | None,
+        value: dt.timedelta | relativedelta | None,
         dialect: "Dialect",  # noqa: ARG002
     ) -> dict[str, Any] | None:
         match value:
             case None:
                 return value
-            case datetime.timedelta() | relativedelta():
+            case dt.timedelta() | relativedelta():
                 return {key: getattr(value, key) for key in self.attr_keys[type(value)]}
             case _:  # type: ignore[reportUnnecessaryComparison]
                 msg = (
-                    "Input type for RelativeInterval should be datetime.timedelta or relativedelta "
+                    "Input type for RelativeInterval should be dt.timedelta or relativedelta "
                     "or None."
                 )
                 raise TypeError(msg)

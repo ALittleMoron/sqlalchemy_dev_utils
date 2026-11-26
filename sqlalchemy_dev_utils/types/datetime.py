@@ -1,6 +1,6 @@
 """Type module with datetime types for columns."""
 
-import datetime
+import datetime as dt
 import zoneinfo
 from typing import TYPE_CHECKING, Any
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 UTC = zoneinfo.ZoneInfo("UTC")
 
 
-class Utcnow(expression.FunctionElement[datetime.datetime]):
+class Utcnow(expression.FunctionElement[dt.datetime]):
     """Alias for DateTime type for new mapping.
 
     Needs to avoid incorrect type mapping (use only Utcnow type, not all DateTime columns).
@@ -24,32 +24,32 @@ class Utcnow(expression.FunctionElement[datetime.datetime]):
     type = DateTime()
 
 
-class UTCDateTime(TypeDecorator[datetime.datetime]):
+class UTCDateTime(TypeDecorator[dt.datetime]):
     """Type decorator for DateTime with UTC."""
 
     impl = DateTime(timezone=True)
     cache_ok = True
 
     @property
-    def python_type(self) -> type[datetime.datetime]:  # noqa: D102  # pragma: no coverage
-        return datetime.datetime
+    def python_type(self) -> type[dt.datetime]:  # noqa: D102  # pragma: no coverage
+        return dt.datetime
 
     def process_result_value(  # noqa: D102
         self: "UTCDateTime",
-        value: "datetime.datetime | None",
+        value: "dt.datetime | None",
         dialect: "Dialect",  # noqa: ARG002
-    ) -> "datetime.datetime | None":
+    ) -> "dt.datetime | None":
         if value is None:
             return value
         if value.tzinfo is None:
-            return value.replace(tzinfo=datetime.UTC)
+            return value.replace(tzinfo=dt.UTC)
         return value
 
     def process_bind_param(  # noqa: D102
         self: "UTCDateTime",
-        value: "datetime.datetime | None",
+        value: "dt.datetime | None",
         dialect: "Dialect",  # noqa: ARG002
-    ) -> "datetime.datetime | None":
+    ) -> "dt.datetime | None":
         if value is None:
             return value
         if value.tzinfo is None:
@@ -58,7 +58,7 @@ class UTCDateTime(TypeDecorator[datetime.datetime]):
                 f'{type(value)} was passed.'
             )
             raise TypeError(msg)
-        return value.astimezone(datetime.UTC)
+        return value.astimezone(dt.UTC)
 
 
 @compiles(Utcnow, "postgresql")

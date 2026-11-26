@@ -35,7 +35,7 @@ jobs:
         shell: bash
     services:
       postgres:
-        image: postgres
+        image: postgres:18.7-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -54,7 +54,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10.2.0
+        uses: astral-sh/setup-uv@v10.4.0
         with:
           python-version: ${{ inputs.python-version }}
           enable-cache: true

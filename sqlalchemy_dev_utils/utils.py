@@ -455,7 +455,7 @@ def apply_loads(
                 "Maybe you passed incorrect relationship name or passed model name."
             )
             warn(msg, stacklevel=1)
-            # TODO: add all available relationships or nearest (fuzzy search) in message.  # noqa: E501, FIX002, TD002, TD003
+            # TODO: add all available relationships or nearest (fuzzy search) in message.  # noqa: FIX002, TD002, TD003
             raise NoModelRelationshipError(msg)
         load = load_strategy(sqlalchemy_relationship)
         loaders.append(load)
@@ -504,7 +504,7 @@ def apply_joins(
                 "Maybe you passed incorrect relationship name or passed model name."
             )
             warn(msg, stacklevel=1)
-            # TODO: add all available relationships or nearest (fuzzy search) in message.  # noqa: E501, FIX002, TD002, TD003
+            # TODO: add all available relationships or nearest (fuzzy search) in message.  # noqa: FIX002, TD002, TD003
             raise NoModelRelationshipError(msg)
         stmt = stmt.join(
             sqlalchemy_relationship,
